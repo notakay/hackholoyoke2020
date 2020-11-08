@@ -5,9 +5,40 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: black;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+#console{
+  font: 18px/30px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 30px 50px 30px 50px;
+  background-color: white;
+  text-align: left;
+  color: black;
+  margin: 20px;
+  border-radius: 10px;
+}
+
+#console h2 {
+  line-height: 24px;
+  display: block;
+  margin: 0 0 10px;
+  }
+
+  #console h1 {
+    line-height: 24px;
+    display: block;
+    margin: 0 0 10px;
+    }
+
+.mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  }
