@@ -6,6 +6,7 @@ import boston_feb from '../../../src/data/0302332-02.json'
 import boston_june from '../../../src/data/0302332-06.json'
 import amherst_feb from '../../../src/data/amherst-0302332-02.json'
 
+
 const Geo = () => {
   const [viewport, setViewport] = useState({
     width: '100vw',
@@ -59,9 +60,17 @@ const Geo = () => {
     } else {
       setCovidLayer("none");
     }
-    setMovementLayer(covidLayer);
   }
 
+  const geoJSON2 = {
+    "type": "FeatureCollection",
+    "features": [
+      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.47636413574219, 42.298135270693116] }, "properties": { "ActivityIndex": 0.16583399999999998, "DayPeriod": "2020-02-01", "Geography": "30233212032332022" } },
+      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.39396667480469, 42.315400802951714] }, "properties": { "ActivityIndex": 0.027041000000000003, "DayPeriod": "2020-02-01", "Geography": "30233212033303120" } },
+      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.45439147949219, 42.08344551677251] }, "properties": { "ActivityIndex": 0.03126, "DayPeriod": "2020-02-01", "Geography": "30233212233002220" } },
+      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.22367858886719, 42.219873273583865] }, "properties": { "ActivityIndex": 0.041421, "DayPeriod": "2020-02-01", "Geography": "30233212303103000" } }
+    ]
+  };
 
   const geoJSON3 = {
     "type": "FeatureCollection",
@@ -74,6 +83,7 @@ const Geo = () => {
   };
 
   const geoJSON = amherst_feb
+
 
 
   return (
@@ -120,10 +130,10 @@ const Geo = () => {
               'circle-color': {
                 property: 'ActivityIndex',
                 stops: [
-                [0, '#2CC990'],
-                [0.07, '#f1f075'],
-                [0.2, '#ea7527'],
-                [0.5, '#e55e5e']
+                  [0, '#2CC990'],
+                  [0.07, '#f1f075'],
+                  [0.2, '#ea7527'],
+                  [0.5, '#e55e5e']
                 ]
               }
             }}
@@ -132,10 +142,11 @@ const Geo = () => {
           />
         </Source>
 
-        <Source id="covid-data" type="geojson" data={geoJSON3}>
+        <Source id="covid-data" type="geojson" data={geoJSON2}>
           <Layer
             id="covid"
             type="circle"
+            filter={['==', 'DayPeriod', dateString]}
             layout={{ 'visibility': covidLayer }}
           />
         </Source>
