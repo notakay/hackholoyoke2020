@@ -18,7 +18,7 @@ code {
   color: #282D33;
   border-radius: 5px;
   margin: auto;
-in}
+}
 
 input[type=range] {
   height: 32px;
@@ -114,3 +114,8 @@ input[type=range]:focus::-ms-fill-upper {
 .slider{
 
 }
+
+.mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  }
