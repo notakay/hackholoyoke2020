@@ -41,7 +41,7 @@ const Geo = () => {
     if (e === undefined) { return; }
     let index = 0;
     while (true) {
-      if (e[index].source === 'markers-data') {
+      if (e[index] && e[index].source === 'markers-data') {
         break;
       } else if (index >= e.length) {
         return;
