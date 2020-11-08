@@ -35,6 +35,22 @@ const Geo = () => {
     return setDate(e.target.value);
   }
 
+  const info = (e) => {
+    console.log(e);
+    let index = 0;
+    while (true) {
+      if (e[index].source === 'markers-data') {
+        break;
+      } else if (index >= e.length) {
+        return;
+      }
+      index++;
+    }
+    const coordinates = e[index].geometry.coordinates.slice();
+    const description = e[index].properties.Description;
+    alert(description);
+  }
+
   const toggleCovidLayer = () => {
     if (covidLayer === "none") {
       setCovidLayer("visible");
@@ -43,17 +59,26 @@ const Geo = () => {
     }
   }
 
-
   const geoJSON2 = {
     "type": "FeatureCollection",
     "features": [
-      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.47636413574219, 42.298135270693116] }, "properties": { "ActivityIndex": 0.16583399999999998, "DayPeriod": "2020-06-01", "Geography": "30233212032332022" } },
-      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.39396667480469, 42.315400802951714] }, "properties": { "ActivityIndex": 0.027041000000000003, "DayPeriod": "2020-06-01", "Geography": "30233212033303120" } },
-      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.45439147949219, 42.08344551677251] }, "properties": { "ActivityIndex": 0.03126, "DayPeriod": "2020-06-01", "Geography": "30233212233002220" } },
-      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.22367858886719, 42.219873273583865] }, "properties": { "ActivityIndex": 0.041421, "DayPeriod": "2020-06-01", "Geography": "30233212303103000" } }
+      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.47636413574219, 42.298135270693116] }, "properties": { "ActivityIndex": 0.16583399999999998, "DayPeriod": "2020-02-01", "Geography": "30233212032332022" } },
+      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.39396667480469, 42.315400802951714] }, "properties": { "ActivityIndex": 0.027041000000000003, "DayPeriod": "2020-02-01", "Geography": "30233212033303120" } },
+      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.45439147949219, 42.08344551677251] }, "properties": { "ActivityIndex": 0.03126, "DayPeriod": "2020-02-01", "Geography": "30233212233002220" } },
+      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.22367858886719, 42.219873273583865] }, "properties": { "ActivityIndex": 0.041421, "DayPeriod": "2020-02-01", "Geography": "30233212303103000" } }
     ]
   };
-        
+
+  const geoJSON3 = {
+    "type": "FeatureCollection",
+    "features": [
+      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.47636413574219, 42.298135270693116] }, "properties": { "ActivityIndex": 0.16583399999999998, "Description": "Covid Case count here", "DayPeriod": "2020-02-01", "Geography": "30233212032332022" } },
+      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.39396667480469, 42.315400802951714] }, "properties": { "ActivityIndex": 0.027041000000000003, "Description": "Covid Case count here", "DayPeriod": "2020-02-01", "Geography": "30233212033303120" } },
+      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.45439147949219, 42.08344551677251] }, "properties": { "ActivityIndex": 0.03126, "Description": "Covid Case count here", "DayPeriod": "2020-02-01", "Geography": "30233212233002220" } },
+      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.22367858886719, 42.219873273583865] }, "properties": { "ActivityIndex": 0.041421, "Description": "Covid Case count here", "DayPeriod": "2020-02-01", "Geography": "30233212303103000" } }
+    ]
+  };
+
   const geoJSON = boston_feb
 
 
@@ -63,7 +88,26 @@ const Geo = () => {
         {...viewport}
         mapboxApiAccessToken="pk.eyJ1Ijoibm90YWtheSIsImEiOiJja2g2a24yamkwZmFwMzB1aWw3OG90NDZmIn0.1IYxmhdVDKYXnQBQZx6vPw"
         onViewportChange={nextViewport => setViewport(nextViewport)}
+        onClick={e => info(e.features)}
       >
+
+        <Source id="markers-data" type="geojson" data={geoJSON3}>
+          <Layer
+            id="markers"
+            type="symbol"
+            paint={{
+              'icon-color': '#ff0000',
+              "icon-halo-color": "#fff",
+              "icon-halo-width": 2
+            }}
+            layout={{
+              'icon-image': 'marker-15',
+              'icon-allow-overlap': true,
+            }}
+          />
+        </Source>
+
+
         <Source id="movement-data" type="geojson" data={geoJSON}>
           <Layer
             id="movement"
@@ -73,19 +117,19 @@ const Geo = () => {
             //   'heatmap-opacity': 0.8,
             //   'heatmap-radius': 10,
             // }}
-            paint= {{
+            paint={{
               'circle-radius': {
-                'base':1.75,
+                'base': 1.75,
                 stops: [[8, 1], [12, 3], [16, 10]]
               },
               'circle-opacity': 0.8,
               'circle-color': {
                 property: 'ActivityIndex',
                 stops: [
-                [0, '#2CC990'],
-                [0.07, '#f1f075'],
-                [0.2, '#ea7527'],
-                [0.5, '#e55e5e']
+                  [0, '#2CC990'],
+                  [0.07, '#f1f075'],
+                  [0.2, '#ea7527'],
+                  [0.5, '#e55e5e']
                 ]
               }
             }}
