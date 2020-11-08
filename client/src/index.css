@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: black;
 }
 
 code {
@@ -18,7 +19,7 @@ code {
   color: #282D33;
   border-radius: 5px;
   margin: auto;
-in}
+}
 
 input[type=range] {
   height: 32px;
