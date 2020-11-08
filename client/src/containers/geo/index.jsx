@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
-import ReactMapGL, { Source, Layer, Popup } from 'react-map-gl';
-// import amherst_june from '../../../src/data/3023320213-06.json'
-import boston_feb from '../../../src/data/0302332-02.json'
-import boston_june from '../../../src/data/0302332-06.json'
-import amherst_feb from '../../../src/data/amherst-0302332-02.json'
+import ReactMapGL, { Source, Layer } from 'react-map-gl';
 
+import school_covid from '../../../src/data/school_covid.json';
+import movement_data from '../../../src/data/movement_data.json';
+import amherst_data from '../../../src/data/amherst_data.json';
 
 const Geo = () => {
   const [viewport, setViewport] = useState({
@@ -14,7 +13,7 @@ const Geo = () => {
     latitude: 42.3601,
     longitude: -71.0589,
     zoom: 11,
-    minZoom: 10,
+    minZoom: 8,
     maxZoom: 12
   });
 
@@ -39,7 +38,7 @@ const Geo = () => {
   }
 
   const info = (e) => {
-    if (!e) {return;}
+    if (e === undefined) { return; }
     let index = 0;
     while (true) {
       if (e[index].source === 'markers-data') {
@@ -49,9 +48,9 @@ const Geo = () => {
       }
       index++;
     }
-    const coordinates = e[index].geometry.coordinates.slice();
-    const description = e[index].properties.Description;
-    alert(description);
+    const description = e[index].properties;
+    let string = description.Cases + " covid cases at " + description.SchoolName;
+    alert(string);
   }
 
   const toggleCovidLayer = () => {
@@ -62,29 +61,9 @@ const Geo = () => {
     }
   }
 
-  const geoJSON2 = {
-    "type": "FeatureCollection",
-    "features": [
-      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.47636413574219, 42.298135270693116] }, "properties": { "ActivityIndex": 0.16583399999999998, "DayPeriod": "2020-02-01", "Geography": "30233212032332022" } },
-      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.39396667480469, 42.315400802951714] }, "properties": { "ActivityIndex": 0.027041000000000003, "DayPeriod": "2020-02-01", "Geography": "30233212033303120" } },
-      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.45439147949219, 42.08344551677251] }, "properties": { "ActivityIndex": 0.03126, "DayPeriod": "2020-02-01", "Geography": "30233212233002220" } },
-      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.22367858886719, 42.219873273583865] }, "properties": { "ActivityIndex": 0.041421, "DayPeriod": "2020-02-01", "Geography": "30233212303103000" } }
-    ]
-  };
-
-  const geoJSON3 = {
-    "type": "FeatureCollection",
-    "features": [
-      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.47636413574219, 42.298135270693116] }, "properties": { "ActivityIndex": 0.16583399999999998, "Description": "Covid Case count here", "DayPeriod": "2020-02-01", "Geography": "30233212032332022" } },
-      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.39396667480469, 42.315400802951714] }, "properties": { "ActivityIndex": 0.027041000000000003, "Description": "Covid Case count here", "DayPeriod": "2020-02-01", "Geography": "30233212033303120" } },
-      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.45439147949219, 42.08344551677251] }, "properties": { "ActivityIndex": 0.03126, "Description": "Covid Case count here", "DayPeriod": "2020-02-01", "Geography": "30233212233002220" } },
-      { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.22367858886719, 42.219873273583865] }, "properties": { "ActivityIndex": 0.041421, "Description": "Covid Case count here", "DayPeriod": "2020-02-01", "Geography": "30233212303103000" } }
-    ]
-  };
-
-  const geoJSON = amherst_feb
-
-
+  const geoJSON = movement_data;
+  const schoolJSON = school_covid;
+  const geoJSON2 = amherst_data;
 
   return (
     <div>
@@ -95,7 +74,7 @@ const Geo = () => {
         onClick={e => info(e.features)}
       >
 
-        <Source id="markers-data" type="geojson" data={geoJSON3}>
+        <Source id="markers-data" type="geojson" data={schoolJSON}>
           <Layer
             id="markers"
             type="symbol"
@@ -107,24 +86,19 @@ const Geo = () => {
             layout={{
               'icon-image': 'marker-15',
               'icon-allow-overlap': true,
+              'visibility': covidLayer
             }}
           />
         </Source>
-
 
         <Source id="movement-data" type="geojson" data={geoJSON}>
           <Layer
             id="movement"
             type="circle"
-            // paint={{
-            //   'heatmap-intensity': 0.7,
-            //   'heatmap-opacity': 0.8,
-            //   'heatmap-radius': 10,
-            // }}
             paint={{
               'circle-radius': {
-                'base':1.75,
-                stops: [[7, 1], [9, 2], [12, 3]]
+                'base': 1.75,
+                stops: [[8, 1], [12, 3], [16, 10]]
               },
               'circle-opacity': 0.8,
               'circle-color': {
@@ -142,12 +116,28 @@ const Geo = () => {
           />
         </Source>
 
-        <Source id="covid-data" type="geojson" data={geoJSON2}>
+        <Source id="amherst-data" type="geojson" data={geoJSON2}>
           <Layer
-            id="covid"
+            id="amherst"
             type="circle"
+            paint={{
+              'circle-radius': {
+                'base': 1.75,
+                stops: [[8, 1], [12, 3], [16, 10]]
+              },
+              'circle-opacity': 0.8,
+              'circle-color': {
+                property: 'ActivityIndex',
+                stops: [
+                  [0, '#2CC990'],
+                  [0.07, '#f1f075'],
+                  [0.2, '#ea7527'],
+                  [0.5, '#e55e5e']
+                ]
+              }
+            }}
             filter={['==', 'DayPeriod', dateString]}
-            layout={{ 'visibility': covidLayer }}
+            layout={{ 'visibility': movementLayer }}
           />
         </Source>
       </ReactMapGL>
@@ -157,7 +147,7 @@ const Geo = () => {
         <h1>{dateString}</h1>
         <input type="range" min={minTime} max={maxTime} value={date} onChange={handleInput} step="86400000" />
         <div>
-          <button className="flat-utton" onClick={toggleCovidLayer}> Toggle Covid Layer </button>
+          <button className="flat-utton" onClick={toggleCovidLayer}> Toggle School Layer </button>
         </div>
       </div>
     </div>
