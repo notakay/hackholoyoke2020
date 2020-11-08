@@ -89,6 +89,20 @@ const Geo = () => {
               'visibility': covidLayer
             }}
           />
+          <Layer
+            id="s-heatmap"
+            type="heatmap"
+            paint={{
+              "heatmap-opacity": 0.7,
+              "heatmap-intensity": 0.8,
+              // "heatmap-radius": 15
+            }}
+            layout={{
+              // 'icon-image': 'marker-15',
+              // 'icon-allow-overlap': true,
+              'visibility': covidLayer
+            }}
+          />
         </Source>
 
         <Source id="movement-data" type="geojson" data={geoJSON}>
