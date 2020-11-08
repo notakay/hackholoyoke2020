@@ -53,11 +53,13 @@ const Geo = () => {
       >
         <Source id="my-data" type="geojson" data={geoJSON}>
           <Layer
-            id="point"
-            type="circle"
+            id="movement"
+            type="heatmap"
             paint={{
-              'circle-radius': 4,
-              'circle-color': '#007cbf'
+              'heatmap-intensity': 0.3,
+              'heatmap-opacity': 0.8,
+              'heatmap-radius': 25,
+              // 'heatmap-weight': 3
             }}
             filter ={['==', 'DayPeriod', dateString]}
           />
