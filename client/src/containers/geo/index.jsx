@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import ReactMapGL, { Source, Layer, Popup } from 'react-map-gl';
 import amherst_june from '../../../src/data/3023320213-06.json'
-
+import boston_feb from '../../../src/data/3023321213-02.json'
 
 const Geo = () => {
   const [viewport, setViewport] = useState({
@@ -10,15 +10,17 @@ const Geo = () => {
     height: '80vh',
     latitude: 42.3601,
     longitude: -71.0589,
-    zoom: 8,
+    zoom: 9,
     minZoom: 7,
+    maxZoom: 16
   });
 
   const [movementLayer, setMovementLayer] = useState('visible');
   const [covidLayer, setCovidLayer] = useState('none');
 
-  const minTimeString = "2020-06-01";
-  const maxTimeString = "2020-06-30";
+  const minTimeString = "2020-02-01";
+  const maxTimeString = "2020-02-28";
+
 
   const minTime = (new Date(minTimeString)).getTime();
   const maxTime = (new Date(maxTimeString)).getTime();
@@ -41,6 +43,7 @@ const Geo = () => {
     }
   }
 
+
   const geoJSON2 = {
     "type": "FeatureCollection",
     "features": [
@@ -50,8 +53,9 @@ const Geo = () => {
       { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-71.22367858886719, 42.219873273583865] }, "properties": { "ActivityIndex": 0.041421, "DayPeriod": "2020-06-01", "Geography": "30233212303103000" } }
     ]
   };
+        
+  const geoJSON = boston_feb
 
-  const geoJSON = amherst_june
 
   return (
     <div>
@@ -63,12 +67,27 @@ const Geo = () => {
         <Source id="movement-data" type="geojson" data={geoJSON}>
           <Layer
             id="movement"
-            type="heatmap"
-            paint={{
-              'heatmap-intensity': 0.3,
-              'heatmap-opacity': 0.8,
-              'heatmap-radius': 25,
-              // 'heatmap-weight': 3
+            type="circle"
+            // paint={{
+            //   'heatmap-intensity': 0.7,
+            //   'heatmap-opacity': 0.8,
+            //   'heatmap-radius': 10,
+            // }}
+            paint= {{
+              'circle-radius': {
+                'base':1.75,
+                stops: [[8, 1], [12, 3], [16, 10]]
+              },
+              'circle-opacity': 0.8,
+              'circle-color': {
+                property: 'ActivityIndex',
+                stops: [
+                [0, '#2CC990'],
+                [0.07, '#f1f075'],
+                [0.2, '#ea7527'],
+                [0.5, '#e55e5e']
+                ]
+              }
             }}
             filter={['==', 'DayPeriod', dateString]}
             layout={{ 'visibility': movementLayer }}
