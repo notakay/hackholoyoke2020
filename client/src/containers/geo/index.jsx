@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { useState } from 'react';
-import ReactMapGL, { Source, Layer, Popup } from 'react-map-gl';
-import amherst_june from '../../../src/data/3023320213-06.json'
+import ReactMapGL, { Source, Layer } from 'react-map-gl';
+
 import boston_feb from '../../../src/data/3023321213-02.json'
 
 const Geo = () => {
   const [viewport, setViewport] = useState({
     width: '100vw',
-    height: '80vh',
+    height: '100vh',
     latitude: 42.3601,
     longitude: -71.0589,
-    zoom: 9,
-    minZoom: 7,
-    maxZoom: 16
+    zoom: 11,
+    minZoom: 10,
+    maxZoom: 12
   });
 
   const [movementLayer, setMovementLayer] = useState('visible');
@@ -36,7 +36,7 @@ const Geo = () => {
   }
 
   const info = (e) => {
-    console.log(e);
+    if (!e) {return;}
     let index = 0;
     while (true) {
       if (e[index].source === 'markers-data') {
@@ -148,11 +148,14 @@ const Geo = () => {
         </Source>
       </ReactMapGL>
 
-      <div id='console'>
-        <p>Day: {dateString}</p>
-        <input className="slider" type="range" min={minTime} max={maxTime} value={date} onChange={handleInput} step="86400000" />
+      <div id="console">
+        <h2>Date:</h2>
+        <h1>{dateString}</h1>
+        <input type="range" min={minTime} max={maxTime} value={date} onChange={handleInput} step="86400000" />
+        <div>
+          <button className="flat-utton" onClick={toggleCovidLayer}> Toggle Covid Layer </button>
+        </div>
       </div>
-      <button onClick={toggleCovidLayer}> Toggle Covid Layer </button>
     </div>
   );
 }
