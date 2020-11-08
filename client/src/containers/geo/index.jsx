@@ -1,21 +1,27 @@
 import * as React from 'react';
 import { useState } from 'react';
-import ReactMapGL, {Source, Layer} from 'react-map-gl';
+import ReactMapGL, { Source, Layer } from 'react-map-gl';
+
+import './geo.css';
 
 const Geo = () => {
   const [viewport, setViewport] = useState({
-    width: 800,
-    height: 800,
+    width: 1200,
+    height: 600,
     latitude: 40.7331,
     longitude: -73.9712,
     zoom: 12
   });
+
+  const [date, setDate] = useState(0)
+
+
   const EMPTY_STYLE = {
     version: 8,
     sources: {},
     layers: []
   };
-  
+
   const geoJSON = {
     "type": "FeatureCollection",
     "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
@@ -30,30 +36,31 @@ const Geo = () => {
     ]
   }
 
+  const handleChange = function (event) {
+    setDate( event.target.value );
+  }
+
   return (
-    <ReactMapGL
-      {...viewport}
-      mapboxApiAccessToken="pk.eyJ1Ijoibm90YWtheSIsImEiOiJja2g2a24yamkwZmFwMzB1aWw3OG90NDZmIn0.1IYxmhdVDKYXnQBQZx6vPw"
-      onViewportChange={nextViewport => setViewport(nextViewport)}
-    >
-      <Source id="my-data" type="geojson" data={geoJSON}>
-        <Layer
-          id="point"
-          type="circle"
-          paint={{
-            'circle-radius': 10,
-            'circle-color': '#007cbf'
-          }} />
-        {/* <Layer
-          id="heat"
-          type="heatmap"
-          paint={{
-            'heatmap-weight': 10
-            'circle-radius': 10,
-            'circle-color': '#007cbf'
-          }} /> */}
-      </Source>
-    </ReactMapGL>
+    <div>
+      <p>Day: {date}</p>
+      <input type="range" min="0" max="31" value={date} onChange={e => setDate(e.target.value)} step="1" />
+
+      <ReactMapGL
+        {...viewport}
+        mapboxApiAccessToken="pk.eyJ1Ijoibm90YWtheSIsImEiOiJja2g2a24yamkwZmFwMzB1aWw3OG90NDZmIn0.1IYxmhdVDKYXnQBQZx6vPw"
+        onViewportChange={nextViewport => setViewport(nextViewport)}
+      >
+        <Source id="my-data" type="geojson" data={geoJSON}>
+          <Layer
+            id="point"
+            type="circle"
+            paint={{
+              'circle-radius': 10,
+              'circle-color': '#007cbf'
+            }} />
+        </Source>
+      </ReactMapGL>
+    </div>
   );
 }
 

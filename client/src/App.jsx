@@ -8,10 +8,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          Covid Geo
-        </p>
-        <Geo></Geo>
+        <Geo />
         {/* <Map/> */}
       </header>
     </div>
